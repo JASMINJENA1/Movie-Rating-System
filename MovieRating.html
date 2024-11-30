@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Movie Rating and Comment System</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Custom CSS -->
+  <style>
+    body {
+      background-image: url(oppenheimerposter.jpg);
+      padding-top: 20px;
+    }
+    .movie-rating {
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.1);
+      padding: 20px;
+    }
+    .stars {
+      display: inline-block;
+      vertical-align: top;
+    }
+    .star {
+      cursor: pointer;
+      font-size: 24px;
+    }
+    .star:hover,
+    .star.active {
+      color: orange;
+    }
+    .comments {
+      margin-top: 20px;
+    }
+    .comment {
+      margin-bottom: 10px;
+      background-color:sandybrown;
+    }
+    .comment p {
+      margin-bottom: 5px;
+    }
+    .btn {
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="movie-rating">
+      <h2 class="text-center mb-4">Rate the Movie</h2>
+      <div class="stars">
+        <span class="star" onclick="rateMovie(1)">★</span>
+        <span class="star" onclick="rateMovie(2)">★</span>
+        <span class="star" onclick="rateMovie(3)">★</span>
+        <span class="star" onclick="rateMovie(4)">★</span>
+        <span class="star" onclick="rateMovie(5)">★</span>
+      </div>
+      <div id="ratingMessage" class="mt-2"></div>
+      <div class="mt-3">
+        <h3>Average Rating: <span id="averageRating">0</span> / 5</h3>
+      </div>
+      <div class="comments">
+        <h3>Comments (<span id="commentCount">0</span>)</h3>
+        <div id="commentList"></div>
+        <textarea class="form-control mt-2" id="comment" placeholder="Add your comment"></textarea>
+        <button class="btn btn-primary btn-block mt-2" onclick="addComment()">Add Comment</button>
+        <button class="btn btn-danger btn-block mt-2" onclick="clearComments()">Clear Comments</button>
+      </div>
+    </div>
+  </div>
+  
+
+<!-- Bootstrap JS -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<!-- Custom JavaScript -->
+<script>
+  let rating = 0;
+  let ratings = [];
+
+// Function to set active stars
+  function setActiveStars(count) {
+    const stars = document.querySelectorAll('.star');
+    stars.forEach((star, index) => {
+      if (index < count) {
+        star.classList.add('active');
+      } else {
+        star.classList.remove('active');
+      }
+    });
+  }
+
+// Function to rate the movie
+function rateMovie(stars) {
+  rating = stars;
+  ratings.push(stars);
+  setActiveStars(stars);
+  updateAverageRating();
+  document.getElementById('ratingMessage').innerHTML = `<div class="alert alert-success" role="alert">You rated the movie ${rating} stars.</div>`;
+}
+
+// Function to add a comment
+function addComment() {
+  const comment = document.getElementById('comment').value.trim();
+  if (comment === '') {
+    alert('Please enter a comment.');
+    return;
+  }
+  const commentList = document.getElementById('commentList');
+  const commentDiv = document.createElement('div');
+  commentDiv.className = 'comment alert alert-secondary';
+  commentDiv.innerHTML = `<p>${comment}</p>`;
+  commentList.appendChild(commentDiv);
+  document.getElementById('comment').value = '';
+  updateCommentCount();
+}
+
+// Function to clear all comments
+function clearComments() {
+  const commentList = document.getElementById('commentList');
+  commentList.innerHTML = '';
+  updateCommentCount();
+}
+
+// Function to update comment count
+function updateCommentCount() {
+  const count = document.getElementById('commentList').children.length;
+  document.getElementById('commentCount').innerText = count;
+}
+
+// Function to update average rating
+function updateAverageRating() {
+  const totalRatings = ratings.reduce((acc, curr) => acc + curr, 0);
+  const averageRating = (totalRatings / ratings.length).toFixed(1);
+  document.getElementById('averageRating').innerText = averageRating || 0;
+}
+
+</script>
+
+</body>
+</html>
